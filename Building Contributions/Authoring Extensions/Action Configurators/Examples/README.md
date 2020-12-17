@@ -3,6 +3,9 @@
 ## AppResources
 Using App Resources within an action configurator.
 
+## AppResources
+Using Environment Variable within an action configurator.
+
 ## Complex Types
 A complex type is shared in a toolkit, which is referenced by the configurator and the App being authored.  This scenario might be useful if a complex type does not need to be discovered and is known ahead of time.
 

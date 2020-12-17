@@ -1,7 +1,9 @@
 # Authoring Extensions
-The App Designer provides the opportunity to extend the authoring experience with user interfaces that make it easy for users to consume your contributions.  There currently exists two authoring extensions:  
+The App Designer provides the opportunity to extend the authoring experience with user interfaces that make it easy for users to consume your contributions.  There currently exists three authoring extensions:  
 1. [Action Configurators](./Action%20Configurators)
 2. [View Configurators](./View%20Configurators)  
+3. [App Template Configurators](./App%20Template%20Configurators)  
+
 The effects on the modeled artifacts are different for each case.  All authoring extensions share some common behaviour, however.  This topic will cover the commonalities, and sub topics will cover the specifics of each type of extension.
 
 ## When to Create an Authoring Extension?
@@ -10,19 +12,21 @@ Let's take the Workflow pillar as an example. It has contributed an action, Star
 2. One of the parameters is the process ID.  This value is difficult to find in Workflow, and would require the user to go into that pillar in order to find the ID.  It would be a much better user experience to list the processes by name inside of a selected Process App.
 3. The input parameters of the process need to be determined and populated based on the selected process.  A custom UI could discover the interfaces, create the appropriate variables and data types, and map the variables to the generic inputParameters of the Start Process action.  
 	
-The same reasoning can be used with Views.  Your view might need to be configured with an App Resource or might require complicated IDs to be entered for its configuration.
+The same reasoning can be used with Views.  Your view might need to be configured with an App Resource or might require complicated IDs to be entered for its configuration.  
+
+If you have created an App Template, you can create a configurator that is integrated with the App creation wizard when a user chooses your template. This allows your template consumer to enter some configuration upfront, without having to search in App Designer to find the pieces of information that need to be customized.
 
 ## Building an Authoring Extension
-You build your authoring extension in App Designer as an App.  To get started, launch BA Studio and create an App.  On the overview tab of your App, use the Advanced section to change the intended usage of the App.  Ensure you are in advanced mode if you don't see the overview tab or the Advanced section.  
+You build your authoring extension in App Designer as an App.  To get started, you may launch BA Studio and create an App.  On the overview tab of your App, use the Advanced section to change the intended usage of the App.  Ensure you are in advanced mode if you don't see the overview tab or the Advanced section.  An even better way to get started is to use the extension templates in the folder [Templates](./Templates).  Download the template corresponding to the extension type and create an App based on that template.
 ![AppOverviewUseAs.png](./images/AppOverviewUseAs.png)  
 The drop down allows you to select from the available authoring extensions.  Selecting one of the options will reveal other required settings, such as the target Action or View for this authoring extension.  Once an App is marked as an authoring extension, the variables for the App change.  An App normally just has variables declared as "Data" because an App doesn't have any inputs or outputs.  However, when an App is being used as a UI extension, the types of variables are extended to include inputs, outputs, and private variables.  The inputs and outputs represent the contract between the authoring environment and the extension.  For example, an Action Configurator will have these locked-in variables:  
 ![AppLockedVariables.png](./images/AppLockedVariables.png)  
 The details for these variables is covered in the sub topics.
 
-After setting your App to be an extension and pointing to your target artifact, develop the user interface as you would any other App.  When the flow of your App reaches an End node, the output variables will be sent back to the authoring environment to be processed accordingly.
+After setting your App to be an extension and pointing to your target artifact, or using one of the templates, develop the user interface as you would any other App.  When the flow of your App reaches an End node, the output variables will be sent back to the authoring environment to be processed accordingly.  The templates set up many of the return codes for you and include buttons and layouts that integrate well with the authoring environment.
 
 ## Exit State
-All authoring extensions have a locked-in output variables called exitState.  This output variable allows the extension to tell the authoring environment how the user wishes to proceed.  For example, when a view configurator is running, the UI should provide Cancel and Finish buttons.  It should also have a button to switch the properties view to the default/advanced rendering.  Constants like "CANCEL", "FINISH", and "ADVANCED_PREVIEW" are used to communicate the user intent.  When the configurator is launched, the supported exit states are passed in via the supportedExitStates input variable.  For example, a view configurator may be launched in a "properties" setting today.  We may launch these configurators in the future in a different context, such as a higher level asset discovery mechanism and the "ADVANCED_PREVIEW" exit state may not be supported.  The UI of the configurator should adapt to show only the controls that support the set of supported exit states.  See [Templates](./Templates) for more information.
+Each authoring extension has a locked-in output variable called exitState.  This output variable allows the extension to tell the authoring environment how the user wishes to proceed.  For example, when a view configurator is running, the UI should provide Cancel and Finish buttons.  It should also have a button to switch the properties view to the default/advanced rendering.  Constants like "CANCEL", "FINISH", and "ADVANCED_PREVIEW" are used to communicate the user intent.  When the configurator is launched, the supported exit states are passed in via the supportedExitStates input variable.  For example, a view configurator may be launched in a "properties" setting today.  We may launch these configurators in the future in a different context, such as a higher level asset discovery mechanism and the "ADVANCED_PREVIEW" exit state may not be supported.  The UI of the configurator should adapt to show only the controls that support the set of supported exit states.  See [Templates](./Templates) for more information.
 
 ### The App Resource Type
 Your contributions may wish to make use of App Resources.  If so, then your designer extension may want to allow the user to easily select a resource.  Your contribution may have the App Resource reference created for you.  Your extension should use the special "AppResource" type as an input/output parameter.  This business object is an extension of String.  From your extension, a stringified JSON structure should be returned as output and expected as input.  The data structure is as follows:
@@ -41,6 +45,11 @@ Your contributions may wish to make use of App Resources.  If so, then your desi
   - scheme: "http" | "https"
 
 The above data is used to create the App Resource in the project settings, with the name or alias being set in the model of the calling artifact.  When your configurator is relaunched, the authoring environment will look up the App Resource and serialize the information as a JSON string to pass back to the configurator.
+
+### The Environment Variable Type
+Your contributions may wish to make use of Environment Variables.  If so, then your designer extension may want to allow the user to easily create or update the Environment Variables.  Your contribution may have the Environment Variable reference created for you.  Your extension should use the special "EnvironmentVariable" type as an input/output parameter and environment variable's name as the input/output name.  This business object is an extension of String.
+
+With the input/output variable name being set in the model of the calling artifact.  When your configurator is relaunched, the authoring environment will look up the Environment Variable will pass back to the configurator.
 
 ## User Interface Consistency
 When developing the user interface, try to adhere to patterns seen in the rest of the authoring environment and other extensions.  This will ensure a smooth, consistent user experience.  For example, using a [Carbon look and feel](https://www.carbondesignsystem.com) is very important.  By leveraging the controls in the UI Toolkit with the Carbon theme, your UI should have some of the basics in place. To help you get started and ensure you have a UI consistent with other contributions, use the templates from the topic [Templates](./Templates).

@@ -21,3 +21,6 @@ This example shows how to format a primitive type data to resposive stracture, t
 
 ## Responsive Data with Complex Types
 This example shows how to format a Complex type data to resposive stracture, to set  the responsive data required configuration options in Views
+
+## Environment Variable
+Using Environment within an view configurator.

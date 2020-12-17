@@ -6,6 +6,7 @@ This authoring extension allows the following to be automatically setup for the 
 2. Variables to be created in the calling Action
 3. Variables to be mapped to input and from output parameters in the data mapping
 4. App Resource references to be created in the settings, with the name used in the data map
+5. Environment Variable references to be created in the settings, with the name used in the data map
 
 # Building an Action Configurator
 Start building your action configurator by creating an App.  Add a dependency to your toolkit containing the target action for this configurator.  In the overview, set the app to be used as an action configurator.  As an example, we'll use the Start Process action in this document.
@@ -64,6 +65,8 @@ In our example:
 In the referencing Action, the app studio does the following for each output variable:
 
 - If the variable is an AppResource, it creates an AppResource in the project settings (if an identical one doesn’t already exist) and sets the app resource name in the data map. What happens if the category and key are the same, but other properties are different? A new app resource entry with a unique name will be generated. 
+
+- If the variable is an EnvironmentVariable, it creates or updates an EnvironmentVariable in the project settings.  
 
 - Else, finds a name/type match within the input variables of the target action. The value should be a primitive, so it sets the literal value in the input data map.
 
@@ -163,6 +166,40 @@ Not all JSON schema is supported, as there are some limitations.  The int64 form
 Likewise, undefined structures (which you might consider to be an Any type) are not supported.
 <pre>
 "extElements" : {}
+</pre>
+
+Nested complex types may also be used by using JSON schema style references.  Here is an example:
+<pre>
+{
+    "Customer": {
+        "type": "object",
+        "properties": {
+            "firstName": {
+                "type": "string"
+            },
+            "lastName": {
+                "type": "string"
+            },
+            "address": {
+                "$ref": "#/definitions/Address"
+            }
+        }
+    },
+    "Address": {
+        "type": "object",
+        "properties": {
+            "country": {
+                "type": "string"
+            },
+            "city": {
+                "type": "string"
+            },
+            "street": {
+                "type": "string"
+            }
+        }
+    }
+}
 </pre>
 
 ### Examples
