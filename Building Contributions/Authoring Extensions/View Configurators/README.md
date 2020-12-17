@@ -27,6 +27,7 @@ For the view configurator extension, there are two fixed input variables:
 **Notes**:
 - Only static values are supported for config data
 - AppResources are also allowed and are handled according to the parent topic (a JSON string is passed back and forth, with the App Resource reference name being set as the config data value)
+- EnvironmentVariables are also allowed and are handled according to the parent topic.
 - Not all outputs have to be specified as inputs.
 
 ### Configurator lifecycle
@@ -36,6 +37,7 @@ For the view configurator extension, there are two fixed input variables:
 4. When the app completes (the user presses finish/done/ok button in the app and an end node is reached in the flow), the outputs are returned to the authoring environment.
 5. In the View/Page being authored, the app designer does the following for each output variable if "ADVANCED_PREVIEW" or "FINISH" is the exit state:
     - If the variable is an AppResource, creates an AppResource in the project settings (if one doesn’t exist for the id/key) and sets the app resource name as the value for the config data.  What happens if the key is the same, but other properties are different => new App Resource entry with unique name will be generated.
+    - If the variable is an EnvironmentVariable, it creates or updates an EnvironmentVariable in the project settings.  
     - For all other types, the value is saved as the config data with the specified config option name.
 6. In addition to the above: "FINISH" will cause the dialog to disappear.  If "ADVANCED_PREVIEW" is returned as the exit state, then the properties view will switch to the default/advanced mode AFTER all the model updates are completed.
 7. If "CANCEL" is the exit state returned, then the model is not updated and the dialog disappears.
