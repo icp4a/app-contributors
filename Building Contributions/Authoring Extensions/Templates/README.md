@@ -32,7 +32,23 @@ The following instructions will show you how create your configurator from scrat
 
 #### **NOTE** : It is important to set the vertical layout height to 90%. 90% is the suggested height. This will fix the overflow within your configurator itself.
 
+## About Dynamic data
 
+By design, user can only bind dynamic variables to configuration options in advanced mode, and if the option is bind to a dynamic data, then we will disable the option in view configurator.
+The following instructions will show you how to dealing with some configuration options contains dynamic data.
+
+1. Add Base Layout (from Configurator Common Controls Toolkit) to the configuration option component
+   ![BaseLayout.png](./images/baseLayout.png)
+2. Config Base Layout, in the general tab, binding the option variable
+   ![GeneralTab.png](./images/generalTab.png)
+3. In the configuration tab, set up the options 
+   1. **dynamicData** - binding to tw.local.dynamicData
+   2. **warningMessage** - ***optional*** the warning message when the option is dynamic data
+   3. **childControlID** - the Base Layout's child which is the configuration option component's Control ID
+   4. **warningPlaceholder** - ***optional*** the placeholder text for the configuration option component
+      ![ConfigurationTab.png](./images/configurationTab.png)
+      ![WarningResult.png](./images/warningResult.png)
+      
 ## About exitState
 By default, when setting the "use as" property to configurator, locked variables are initially created. One of the most important part when using this template is the exitState.
 
@@ -48,6 +64,6 @@ By default, the template already wired the basic settings in creating your confi
 ![Diagram.png](./images/diagram.png)  
 
 ## About encode password
-#####Only required in App Configurator
+####Only required in App Configurator
 Before transfer the password inside AppResource, we need to encode it inside the configurator, we have provided an action "Encode Password" to encode the password.
 ![encodePasswordAction.png](./images/encodePasswordAction.png)
